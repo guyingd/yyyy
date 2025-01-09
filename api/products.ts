@@ -1,6 +1,13 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { sql } from '@vercel/postgres';
 
+interface ProductBody {
+  name: string;
+  price: number;
+  category: string;
+  description?: string;
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     switch (req.method) {
@@ -9,32 +16,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.json(rows);
 
       case 'POST':
-        const { name, price, category, description } = req.body;
+        const body = req.body as ProductBody;
         const result = await sql`
           INSERT INTO products (name, price, category, description)
-          VALUES (${name}, ${price}, ${category}, ${description || null})
+          VALUES (${body.name}, ${body.price}, ${body.category}, ${body.description || null})
           RETURNING *
         `;
         return res.json(result.rows[0]);
 
       case 'PUT':
-        const updateId = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+        const updateId = Array.isArray(req.query['id']) ? req.query['id'][0] : req.query['id'];
         if (!updateId) {
           return res.status(400).json({ error: '缺少 ID 参数' });
         }
+        const updateBody = req.body as ProductBody;
         const updateResult = await sql`
           UPDATE products
-          SET name = ${req.body.name},
-              price = ${req.body.price},
-              category = ${req.body.category},
-              description = ${req.body.description || null}
+          SET name = ${updateBody.name},
+              price = ${updateBody.price},
+              category = ${updateBody.category},
+              description = ${updateBody.description || null}
           WHERE id = ${updateId}
           RETURNING *
         `;
         return res.json(updateResult.rows[0]);
 
       case 'DELETE':
-        const deleteId = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+        const deleteId = Array.isArray(req.query['id']) ? req.query['id'][0] : req.query['id'];
         if (!deleteId) {
           return res.status(400).json({ error: '缺少 ID 参数' });
         }
