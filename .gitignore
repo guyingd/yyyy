@@ -42,3 +42,18 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Vercel
+.vercel
+.env
+.env*.local
+
+# Dependencies
+/node_modules
+
+# Build output
+/dist
+
+# IDE
+.vscode
+.idea

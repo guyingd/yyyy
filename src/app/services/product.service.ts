@@ -8,7 +8,7 @@ import { Product } from '../models/product.model';
     providedIn: 'root'
 })
 export class ProductService {
-    private apiUrl = 'http://localhost:3000/api/products';
+    private readonly API_URL = '/api/products'; // Vercel Serverless Functions API
     private products = new BehaviorSubject<Product[]>([]);
     products$ = this.products.asObservable();
 
@@ -17,8 +17,14 @@ export class ProductService {
     }
 
     private loadProducts() {
-        this.http.get<Product[]>(this.apiUrl)
-            .subscribe(data => this.products.next(data));
+        this.http.get<Product[]>(this.API_URL)
+            .subscribe({
+                next: (data) => this.products.next(data),
+                error: (error) => {
+                    console.error('加载商品失败:', error);
+                    this.products.next([]);
+                }
+            });
     }
 
     getProducts(): Observable<Product[]> {
@@ -26,27 +32,33 @@ export class ProductService {
     }
 
     addProduct(product: Product) {
-        this.http.post<Product>(this.apiUrl, product)
+        this.http.post<Product>(this.API_URL, product)
             .pipe(
                 tap(() => this.loadProducts())
             )
-            .subscribe();
+            .subscribe({
+                error: (error) => console.error('添加商品失败:', error)
+            });
     }
 
     updateProduct(product: Product) {
-        this.http.put<Product>(`${this.apiUrl}/${product.id}`, product)
+        this.http.put<Product>(`${this.API_URL}/${product.id}`, product)
             .pipe(
                 tap(() => this.loadProducts())
             )
-            .subscribe();
+            .subscribe({
+                error: (error) => console.error('更新商品失败:', error)
+            });
     }
 
     deleteProduct(id: number) {
-        this.http.delete(`${this.apiUrl}/${id}`)
+        this.http.delete(`${this.API_URL}/${id}`)
             .pipe(
                 tap(() => this.loadProducts())
             )
-            .subscribe();
+            .subscribe({
+                error: (error) => console.error('删除商品失败:', error)
+            });
     }
 
     searchProducts(query: string, products: Product[]): Product[] {
