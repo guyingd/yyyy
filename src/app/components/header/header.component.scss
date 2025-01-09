@@ -1,0 +1,59 @@
+@use '../../../styles/variables' as *;
+
+.header {
+  background: var(--card-background);
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: $primary-color;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      i {
+        font-size: 1.8rem;
+      }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+
+      a {
+        color: var(--text-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: $primary-color;
+        }
+      }
+
+      .theme-toggle {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        cursor: pointer;
+        padding: 0.5rem;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+  }
+} 

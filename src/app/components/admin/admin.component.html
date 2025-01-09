@@ -1,0 +1,123 @@
+<div class="admin-container">
+  <ng-container *ngIf="!(isAuthenticated$ | async)">
+    <div class="login-form">
+      <h2>管理员登录</h2>
+      <div class="form-group">
+        <input 
+          type="password" 
+          [(ngModel)]="password" 
+          placeholder="请输入密码"
+          (keyup.enter)="login()">
+        <button (click)="login()">登录</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="isAuthenticated$ | async">
+    <div class="admin-header">
+      <h2>商品管理</h2>
+      <div class="header-actions">
+        <button class="add-btn" (click)="showAddForm = true">添加商品</button>
+        <button class="logout-btn" (click)="logout()">退出登录</button>
+      </div>
+    </div>
+
+    <!-- 添加商品表单 -->
+    <div class="add-product-form" *ngIf="showAddForm">
+      <h3>添加新商品</h3>
+      <form (ngSubmit)="addProduct()" #productForm="ngForm">
+        <div class="form-group">
+          <label>商品名称:</label>
+          <input 
+            [(ngModel)]="newProduct.name" 
+            name="name"
+            required
+            #name="ngModel"
+            placeholder="请输入商品名称">
+          <div class="error" *ngIf="name.invalid && (name.dirty || name.touched)">
+            商品名称不能为空
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>价格:</label>
+          <input 
+            type="number" 
+            [(ngModel)]="newProduct.price" 
+            name="price"
+            required
+            min="0"
+            #price="ngModel"
+            placeholder="请输入价格">
+          <div class="error" *ngIf="price.invalid && (price.dirty || price.touched)">
+            请输入有效的价格
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>分类:</label>
+          <input 
+            [(ngModel)]="newProduct.category" 
+            name="category"
+            required
+            #category="ngModel"
+            placeholder="请输入分类">
+          <div class="error" *ngIf="category.invalid && (category.dirty || category.touched)">
+            分类不能为空
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="!productForm.form.valid">添加</button>
+          <button type="button" (click)="cancelAdd()">取消</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 商品列表 -->
+    <div class="products-list">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>价格</th>
+            <th>分类</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of products$ | async">
+            <ng-container *ngIf="editingProduct?.id !== product.id; else editRow">
+              <td>{{product.id}}</td>
+              <td>{{product.name}}</td>
+              <td>¥{{product.price}}</td>
+              <td>{{product.category}}</td>
+              <td class="actions">
+                <button class="edit-btn" (click)="startEdit(product)">编辑</button>
+                <button class="delete-btn" (click)="confirmDelete(product.id)">删除</button>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #editRow>
+        <td>{{editingProduct?.id}}</td>
+        <td>
+          <input [(ngModel)]="editingProduct!.name" required>
+        </td>
+        <td>
+          <input type="number" [(ngModel)]="editingProduct!.price" required min="0">
+        </td>
+        <td>
+          <input [(ngModel)]="editingProduct!.category" required>
+        </td>
+        <td class="actions">
+          <button class="save-btn" (click)="saveEdit()">保存</button>
+          <button class="cancel-btn" (click)="cancelEdit()">取消</button>
+        </td>
+      </ng-template>
+    </div>
+  </ng-container>
+</div> 

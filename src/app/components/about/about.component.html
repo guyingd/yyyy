@@ -1,0 +1,38 @@
+<div class="about-container">
+  <div class="about-content">
+    <h1>关于我们</h1>
+    
+    <section class="about-section">
+      <h2>项目介绍</h2>
+      <p>商品价格查询系统是一个现代化的网络应用，旨在为用户提供便捷的商品价格查询服务。系统支持多种查询方式，包括关键词搜索和分类筛选，帮助用户快速找到所需商品的价格信息。</p>
+    </section>
+
+    <section class="about-section">
+      <h2>开发者信息</h2>
+      <div class="developer-info">
+        <div class="info-item">
+          <i class="fas fa-user"></i>
+          <span>作者：{{author.name}}</span>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-envelope"></i>
+          <a [href]="'mailto:' + author.email">{{author.email}}</a>
+        </div>
+        <div class="info-item">
+          <i class="fab fa-github"></i>
+          <a [href]="author.github" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2>技术栈</h2>
+      <ul class="tech-stack">
+        <li><i class="fab fa-angular"></i> Angular</li>
+        <li><i class="fab fa-sass"></i> SCSS</li>
+        <li><i class="fas fa-mobile-alt"></i> 响应式设计</li>
+        <li><i class="fas fa-moon"></i> 深色模式支持</li>
+      </ul>
+    </section>
+  </div>
+</div> 

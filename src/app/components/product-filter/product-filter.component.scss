@@ -1,0 +1,38 @@
+@use '../../../styles/variables' as *;
+
+.filter-container {
+  padding: 1rem 2rem;
+  background: var(--card-background);
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+
+    .category-btn {
+      padding: 0.5rem 1rem;
+      border: 2px solid transparent;
+      border-radius: 1.5rem;
+      background: var(--background-color);
+      color: var(--text-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+
+      &:hover {
+        border-color: $primary-color;
+        color: $primary-color;
+      }
+
+      &.active {
+        background: $primary-color;
+        color: white;
+        border-color: $primary-color;
+      }
+    }
+  }
+} 

@@ -1,0 +1,27 @@
+<div class="product-page">
+  <app-product-search (search)="onSearch($event)"></app-product-search>
+  
+  <app-product-filter 
+    [categories]="categories"
+    (categoryChange)="onCategoryChange($event)">
+  </app-product-filter>
+
+  <div class="product-container">
+    <div class="product-card" *ngFor="let product of filteredProducts">
+      <div class="product-info">
+        <h3>{{product.name}}</h3>
+        <p class="price">¥{{product.price}}</p>
+        <span class="category">{{product.category}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="filteredProducts.length === 0" class="no-results">
+    <i class="fas fa-search"></i>
+    <p>未找到相关商品</p>
+  </div>
+
+  <div class="admin-link">
+    <a routerLink="/admin">管理商品</a>
+  </div>
+</div> 

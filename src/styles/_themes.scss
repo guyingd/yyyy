@@ -1,0 +1,19 @@
+@use 'variables' as *;
+
+:root {
+    --background-color: #{$background-light};
+    --text-color: #{$text-light};
+    --card-background: #{$gray-100};
+}
+
+.dark-mode {
+    --background-color: #{$background-dark};
+    --text-color: #{$text-dark};
+    --card-background: #{$gray-800};
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+} 

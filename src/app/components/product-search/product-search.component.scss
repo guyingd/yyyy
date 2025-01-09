@@ -1,0 +1,41 @@
+@use '../../../styles/variables' as *;
+
+.search-container {
+  padding: 1rem 2rem;
+  background: var(--card-background);
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .search-box {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+
+    input {
+      width: 100%;
+      padding: 1rem 1rem 1rem 3rem;
+      border: 2px solid transparent;
+      border-radius: 2rem;
+      font-size: 1rem;
+      background: var(--background-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $primary-color;
+      font-size: 1.2rem;
+    }
+  }
+} 

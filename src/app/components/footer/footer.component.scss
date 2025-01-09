@@ -1,0 +1,38 @@
+@use '../../../styles/variables' as *;
+
+.footer {
+  background: var(--card-background);
+  padding: 2rem;
+  margin-top: 3rem;
+  
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+
+    .author-info {
+      margin-bottom: 1rem;
+      
+      .name {
+        color: $primary-color;
+        font-weight: bold;
+      }
+
+      .email {
+        color: var(--text-color);
+        text-decoration: none;
+        margin-left: 0.5rem;
+        
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+
+    .copyright {
+      color: var(--text-color);
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+  }
+} 

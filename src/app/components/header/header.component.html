@@ -1,0 +1,15 @@
+<header class="header">
+  <div class="header-content">
+    <a routerLink="/" class="logo">
+      <i class="fas fa-tags"></i>
+      商品价格查询
+    </a>
+    <nav class="nav-links">
+      <a routerLink="/">首页</a>
+      <a routerLink="/about">关于</a>
+      <button class="theme-toggle" (click)="toggleTheme()">
+        <i class="fas" [class.fa-sun]="!(isDarkMode$ | async)" [class.fa-moon]="isDarkMode$ | async"></i>
+      </button>
+    </nav>
+  </div>
+</header> 
