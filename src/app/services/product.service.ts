@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { Product } from '../models/product.model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProductService {
-    private readonly API_URL = '/api/products'; // Vercel Serverless Functions API
+    private readonly API_URL = '/api/products';
     private products = new BehaviorSubject<Product[]>([]);
     products$ = this.products.asObservable();
 
@@ -33,30 +32,24 @@ export class ProductService {
 
     addProduct(product: Product) {
         this.http.post<Product>(this.API_URL, product)
-            .pipe(
-                tap(() => this.loadProducts())
-            )
             .subscribe({
+                next: () => this.loadProducts(),
                 error: (error) => console.error('添加商品失败:', error)
             });
     }
 
     updateProduct(product: Product) {
         this.http.put<Product>(`${this.API_URL}/${product.id}`, product)
-            .pipe(
-                tap(() => this.loadProducts())
-            )
             .subscribe({
+                next: () => this.loadProducts(),
                 error: (error) => console.error('更新商品失败:', error)
             });
     }
 
     deleteProduct(id: number) {
         this.http.delete(`${this.API_URL}/${id}`)
-            .pipe(
-                tap(() => this.loadProducts())
-            )
             .subscribe({
+                next: () => this.loadProducts(),
                 error: (error) => console.error('删除商品失败:', error)
             });
     }

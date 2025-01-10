@@ -1,52 +1,36 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { sql } from '@vercel/postgres';
+import { kv } from '@vercel/kv';
 
-interface ProductBody {
-  name: string;
-  price: number;
-  category: string;
-  description?: string;
-}
+const PRODUCTS_KEY = 'products';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     switch (req.method) {
       case 'GET':
-        const { rows } = await sql`SELECT * FROM products`;
-        return res.json(rows);
+        const products = await kv.get(PRODUCTS_KEY) || [];
+        return res.json(products);
 
       case 'POST':
-        const body = req.body as ProductBody;
-        const result = await sql`
-          INSERT INTO products (name, price, category, description)
-          VALUES (${body.name}, ${body.price}, ${body.category}, ${body.description || null})
-          RETURNING *
-        `;
-        return res.json(result.rows[0]);
+        const currentProducts = await kv.get<any[]>(PRODUCTS_KEY) || [];
+        const maxId = Math.max(...currentProducts.map(p => p.id), 0);
+        const newProduct = { ...req.body, id: maxId + 1 };
+        await kv.set(PRODUCTS_KEY, [...currentProducts, newProduct]);
+        return res.json(newProduct);
 
       case 'PUT':
-        const updateId = Array.isArray(req.query['id']) ? req.query['id'][0] : req.query['id'];
-        if (!updateId) {
-          return res.status(400).json({ error: '缺少 ID 参数' });
-        }
-        const updateBody = req.body as ProductBody;
-        const updateResult = await sql`
-          UPDATE products
-          SET name = ${updateBody.name},
-              price = ${updateBody.price},
-              category = ${updateBody.category},
-              description = ${updateBody.description || null}
-          WHERE id = ${updateId}
-          RETURNING *
-        `;
-        return res.json(updateResult.rows[0]);
+        const { id } = req.query;
+        const existingProducts = await kv.get<any[]>(PRODUCTS_KEY) || [];
+        const updatedProducts = existingProducts.map(p => 
+          p.id === Number(id) ? { ...req.body, id: Number(id) } : p
+        );
+        await kv.set(PRODUCTS_KEY, updatedProducts);
+        return res.json(req.body);
 
       case 'DELETE':
-        const deleteId = Array.isArray(req.query['id']) ? req.query['id'][0] : req.query['id'];
-        if (!deleteId) {
-          return res.status(400).json({ error: '缺少 ID 参数' });
-        }
-        await sql`DELETE FROM products WHERE id = ${deleteId}`;
+        const deleteId = req.query.id;
+        const productsToUpdate = await kv.get<any[]>(PRODUCTS_KEY) || [];
+        const filteredProducts = productsToUpdate.filter(p => p.id !== Number(deleteId));
+        await kv.set(PRODUCTS_KEY, filteredProducts);
         return res.json({ message: '删除成功' });
 
       default:
